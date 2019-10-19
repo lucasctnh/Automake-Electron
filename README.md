@@ -10,3 +10,5 @@ You can either run `npm install` or `npm run start:first` that will install all 
 
 Once you have the dependencies installed you can run `npm run dist` to automatically build the installer according to
 your OS.
+
+Before packaging, remember to set NODE_ENV as production mode.
