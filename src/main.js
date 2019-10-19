@@ -134,7 +134,7 @@ const mainMenuTemplate = [
 			{
 				label: 'Github page',
 				click() {
-					shell.openExternal("https://www.github.com/coutlcdo/")
+					shell.openExternal("https://github.com/coutlcdo/Automake-Electron")
 				}
 			},
 			{
