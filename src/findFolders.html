@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<head>
+	<title>Automake</title>
+	<link rel="stylesheet" type="text/css" href="public/styles.css">
+</head>
+<body>
+	<span id="arrow">&uArr;</span>
+	<div class="content">
+		<p>If necessary, instructions can be found at <strong id="arrow-hover">Help</strong> (recommended).</p>
+		<hr/>
+
+		<p>Select the folder where your Allegro <strong>projects</strong> are:</p>
+		<div class="like-form">
+			<input id="allegro-projs" type="text" value="" readonly>
+			<button id="b1" class="search btn">Search</button>
+		</div>
+
+		<p id="aux-mrg-top">Select the folder where your Allegro <strong>library</strong> is:</p>
+		<div class="like-form">
+			<input id="allegro-lib" type="text" value="" readonly>
+			<button id="b2" class="search btn">Search</button>
+		</div>
+
+		<button id="submit" class="btn">Submit</button>
+	</div>
+
+	<script>
+		const phelp = document.querySelector('#arrow-hover')
+		phelp.addEventListener('mouseover', showArrow)
+
+		function showArrow() {
+			const arrow = document.getElementById('arrow')
+			arrow.setAttribute('style', "display: block;")
+		}
+
+		phelp.addEventListener('mouseleave', hideArrow)
+
+		function hideArrow() {
+			const arrow = document.getElementById('arrow')
+			arrow.setAttribute('style', "display: none;")
+		}
+
+		const electron = require('electron')
+		const { dialog } = electron.remote
+		const { ipcRenderer } = electron
+
+		let filePath = [];
+		getPath1 = async () => {
+			return await dialog.showOpenDialog({
+				title: 'Select a folder',
+				properties: ['openDirectory']
+			}, (filePathArr) => {
+				filePath.push(filePathArr[0])
+
+				if(filePath[0] != undefined)
+					document.getElementById("allegro-projs").value = filePath[0]
+			})
+		}
+
+		getPath2 = async () => {
+			return await dialog.showOpenDialog({
+				title: 'Select a folder',
+				properties: ['openDirectory']
+			}, (filePathArr) => {
+				if(filePath[0] == undefined)
+					console.error('You need to asign projects folder first.')
+				else
+					filePath.push(filePathArr[0])
+
+				if(filePath[1] != undefined)
+					document.getElementById("allegro-lib").value = filePath[1]
+			})
+		}
+
+		sendToMain = () => {
+			ipcRenderer.send('load-watcher', filePath)
+		}
+
+		let b1 = document.querySelector('#b1')
+		b1.onclick = getPath1
+		let b2 = document.querySelector('#b2')
+		b2.onclick = getPath2
+
+		let subButton = document.querySelector('#submit')
+		subButton.onclick = sendToMain
+	</script>
+</body>
+</html>

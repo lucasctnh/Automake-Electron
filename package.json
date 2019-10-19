@@ -1,0 +1,52 @@
+{
+  "name": "automated-makefile-electron",
+  "version": "0.1.2",
+  "license": "MIT",
+  "description": "An app to automate the process of compiling Allegro projects",
+  "author": "Lucas Coutinho <https://github.com/coutlcdo>",
+  "main": "src/main.js",
+  "scripts": {
+    "postinstall": "install-app-deps",
+    "start": "npm install && electron .",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder",
+    "package-mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --icon=assets/icons/mac/icon.icns --prune=true --out=release-builds",
+    "package-win": "electron-packager . ShoppingListApp --overwrite --asar=true --platform=win32 --arch=ia32 --icon=assets/icons/win/icon.ico --prune=true --out=release-builds --version-string.CompanyName=CE --version-string.FileDescription=CE --version-string.ProductName=\"ShoppingList\"",
+    "package-linux": "electron-packager . ShoppingListApp --overwrite --asar=true --platform=linux --arch=x64 --icon=assets/icons/png/icon.png --prune=true --out=release-builds"
+  },
+  "build": {
+    "appId": "com.electron.automkfl",
+    "productName": "Automake",
+    "dmg": {
+      "contents": [
+        {
+          "x": 110,
+          "y": 150
+        },
+        {
+          "x": 240,
+          "y": 150,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "linux": {
+      "target": [
+        "AppImage",
+        "deb"
+      ]
+    },
+    "win": {
+      "target": "NSIS"
+    }
+  },
+  "dependencies": {
+    "chokidar": "^3.2.2",
+    "node-run-cmd": "^1.0.1"
+  },
+  "devDependencies": {
+    "electron": "^6.0.12",
+    "electron-builder": "^21.2.0"
+  }
+}
