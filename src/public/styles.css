@@ -29,6 +29,7 @@ body, input, button {
 		#ff5a5a 50%,
 		#cf4949 50%);
 	-webkit-background-clip: text;
+	background-clip: text;
 	-webkit-text-fill-color: transparent;
 	background-size: 20px 20px;
 	background-position: 0 0;
