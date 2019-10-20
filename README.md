@@ -4,7 +4,7 @@ Similarly to [Automated-Makefile](https://github.com/coutlcdo/Automated-Makefile
 
 ## Running locally
 
-You can either run `npm install` or `npm run start:first` that will install all dependencies and run the App on sequence.
+You can either run `npm install` to only install dependencies or run `npm run start:first` to install all dependencies and run the App on sequence.
 
 ## Packaging
 
