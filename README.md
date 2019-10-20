@@ -12,3 +12,9 @@ Once you have the dependencies installed you can run `npm run dist` to automatic
 your OS.
 
 Before packaging, remember to set NODE_ENV as production mode.
+
+## Mirrors
+
+Pre-packaged installers:
+- Version 0.1.4:
+	- Windows: [MIRROR #1](https://www.dropbox.com/s/qgvbuqdyiuat4wm/Automake%20Setup%200.1.4.exe?dl=0)

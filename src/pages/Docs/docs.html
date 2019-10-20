@@ -5,14 +5,14 @@
 </head>
 <body>
 	<div class="doc-content">
-		<h1>Read the instructions carefully:</h1><p>The algorithm will only work if you setup the environment in the right
-		order</p>
+		<h1>Read the instructions carefully:</h1><p>The algorithm right now will only work if you setup the environment
+		correctly.</p>
 
 		<hr/>
 
 		<h2>Instructions for the Environment Setup</h2>
-		<p>You need to have both <i>gcc</i> and <i>MinGW</i> properly installed and setted at PATH.</p>
-		<p><strong style="color: #ff5a5a;">Important!</strong> Inside your <i>MinGW</i> instalation folder, go to /bin
+		<p>You need to have both gcc and MinGW properly installed and setted at PATH.</p>
+		<p><strong style="color: #ff5a5a;">Important!</strong> Inside your MinGW instalation folder, go to /bin
 		and be sure the file <strong>mingw32-make</strong> is <strong>exactly</strong> as written here.</p>
 
 		<hr/>
@@ -28,8 +28,9 @@
 		have Allegro projects folder path and the second should have Allegro library folder path)</p>
 		<p>If everything is correct you can <strong>Submit</strong>.</p>
 
-		<p>Once the paths have been submitted, the Automake App is already reading changes in the directory, you can keep it on
-		background and work on your projects. Every time you save your project it will automatically compile into an
+		<p>Once the paths have been submitted, you'll be redirected to the Watcher window. This means that
+		<span id="automk">Automake</span> is already reading changes in the directory, you can now keep the app on
+		background and work on your projects. Every time you save your project the app will automatically compile it into an
 		executable.</p>
 
 		<hr/>
@@ -45,5 +46,19 @@
 
 		<p>Click <strong>Home</strong> or <strong>Ctrl+H (Command+H on Mac)</strong> to go back to the homepage.</p>
 	</div>
+
+	<div id="made-by-rel"><span id="name">Lucas Coutinho</span> &#9400;</div>
+
+	<script>
+		const electron = require('electron')
+		const { shell } = electron
+
+		const name = document.getElementById('made-by-rel')
+		name.onclick = openGit
+
+		function openGit() {
+			shell.openExternal("https://github.com/coutlcdo")
+		}
+	</script>
 </body>
 </html>

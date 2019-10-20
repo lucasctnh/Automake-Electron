@@ -1,8 +1,15 @@
 const chokidar = require('chokidar')
 const nrc = require('node-run-cmd')
-const electron = require('electron')
 
-const { ipcRenderer } = electron
+const electron = require('electron')
+const { ipcRenderer, shell } = electron
+
+const name = document.getElementById('made-by-abs')
+name.onclick = openGit
+
+function openGit() {
+	shell.openExternal("https://github.com/coutlcdo")
+}
 
 const fs = require('fs')
 const path = require('path')
