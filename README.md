@@ -16,9 +16,9 @@ Before packaging, remember to set `NODE_ENV` as production mode.
 ## Mirrors
 
 Pre-packaged installers:
-- Version 0.2.5:
+- Version 0.2.6:
 	- Windows:
-		- [.exe Installer](https://www.dropbox.com/s/dfybig3zj6t3xqf/Automake%20Setup%200.2.5.exe?dl=0)
+		- [.exe Installer](https://www.dropbox.com/s/5v9du3e1f30myo6/Automake%20Setup%200.2.6.exe?dl=0)
 - Version 0.1.5:
 	- Windows:
 		- [.exe Installer](https://www.dropbox.com/s/f3k76mv6d8l813j/Automake%20Setup%200.1.5.exe?dl=0)
