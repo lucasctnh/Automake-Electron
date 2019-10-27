@@ -3,8 +3,9 @@ const nrc = require('node-run-cmd')
 
 const electron = require('electron')
 const { ipcRenderer, shell } = electron
+const { dialog } = electron.remote
 
-const name = document.getElementById('made-by-abs')
+const name = document.getElementById('cpr')
 name.onclick = openGit
 
 function openGit() {
@@ -95,14 +96,39 @@ clean:
 				ul.appendChild(li)
 
 				setTimeout(() => {
-					nrc.run('mingw32-make', { cwd: pathBase, shell: true })
+					let flag_error = 0;
 
-					ul.innerHTML = ''
-					const li = document.createElement('li')
-					const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
+					showError = (data) => {
+						console.log(data)
+						flag_error = 1;
 
-					li.appendChild(itemText)
-					ul.appendChild(li)
+						ul.innerHTML = ''
+
+						const p = document.createElement('p')
+						const itemText = document.createTextNode(`${data}`)
+
+						p.appendChild(itemText)
+
+						const content = document.getElementById('cont')
+						content.setAttribute('class', 'dcontent alertError')
+
+						content.appendChild(p)
+
+						const cpr = document.getElementById('cpr')
+						cpr.setAttribute('class', 'made-by-rel')
+
+						dialog.showErrorBox('Error', 'Compilation has failed. Details are shown on app.')
+					}
+					nrc.run('mingw32-make', { cwd: pathBase, shell: true, onError: showError })
+
+					if(flag_error == 0) {
+						ul.innerHTML = ''
+						const li = document.createElement('li')
+						const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
+
+						li.appendChild(itemText)
+						ul.appendChild(li)
+					}
 				}, 1000)
 			})
 		})

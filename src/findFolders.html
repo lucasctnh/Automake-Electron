@@ -24,14 +24,14 @@
 		<button id="submit" class="btn">Submit</button>
 	</div>
 
-	<div id="made-by-abs"><span id="name">Lucas Coutinho</span> &#9400;</div>
+	<div id="cpr" class="made-by-abs"><span id="name">Lucas Coutinho</span> &#9400;</div>
 
 	<script>
 		const electron = require('electron')
 		const { dialog } = electron.remote
 		const { ipcRenderer, shell } = electron
 
-		const name = document.getElementById('made-by-abs')
+		const name = document.getElementById('cpr')
 		name.onclick = openGit
 
 		function openGit() {

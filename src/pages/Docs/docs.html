@@ -46,13 +46,13 @@
 		<p>Click <strong>Home</strong> or <strong>Ctrl+H (Command+H on Mac)</strong> to go back to the homepage.</p>
 	</div>
 
-	<div id="made-by-rel"><span id="name">Lucas Coutinho</span> &#9400;</div>
+	<div id="cpr" class="made-by-rel"><span id="name">Lucas Coutinho</span> &#9400;</div>
 
 	<script>
 		const electron = require('electron')
 		const { shell } = electron
 
-		const name = document.getElementById('made-by-rel')
+		const name = document.getElementById('cpr')
 		name.onclick = openGit
 
 		function openGit() {
