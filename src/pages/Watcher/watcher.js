@@ -99,23 +99,26 @@ clean:
 					let flag_error = 0;
 
 					showError = (data) => {
+						ul.innerHTML = ''
+
 						console.log(data)
 						flag_error = 1;
 
-						ul.innerHTML = ''
-
-						const p = document.createElement('p')
+						const li = document.createElement('li')
 						const itemText = document.createTextNode(`${data}`)
 
-						p.appendChild(itemText)
+						li.appendChild(itemText)
+						ul.appendChild(li)
 
 						const content = document.getElementById('cont')
-						content.setAttribute('class', 'dcontent alertError')
+						if(data.length > 1200) {
+							content.setAttribute('class', 'dcontent alertError')
 
-						content.appendChild(p)
-
-						const cpr = document.getElementById('cpr')
-						cpr.setAttribute('class', 'made-by-rel')
+							const cpr = document.getElementById('cpr')
+							cpr.setAttribute('class', 'made-by-rel')
+						}
+						else
+							content.setAttribute('class', 'content alertError')
 
 						dialog.showErrorBox('Error', 'Compilation has failed. Details are shown on app.')
 					}
@@ -123,6 +126,11 @@ clean:
 
 					if(flag_error == 0) {
 						ul.innerHTML = ''
+						const content = document.getElementById('cont')
+						content.setAttribute('class', 'content')
+						const cpr = document.getElementById('cpr')
+						cpr.setAttribute('class', 'made-by-abs')
+
 						const li = document.createElement('li')
 						const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
 
