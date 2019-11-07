@@ -8,20 +8,19 @@ You can either run `npm install` to only install dependencies or run `npm run st
 
 ## Packaging
 
-Once you have the dependencies installed you can run `npm run dist` to automatically build the installer according to
-your OS.
+Once you have the dependencies installed you can run `npm run dist` to automatically build the installer according to your OS.
 
 Before packaging, remember to set `NODE_ENV` as production mode.
 
 ## Mirrors
 
 Pre-packaged installers:
+- Version 1.0.0:
+	- Windows:
+		- [.exe Installer](https://www.dropbox.com/s/knjk4fa51fwokp3/Automake%20Setup%201.0.0.exe?dl=0)
+	- Linux:
+		- [.deb File]()
+		- [AppImage]()
 - Version 0.2.6:
 	- Windows:
 		- [.exe Installer](https://www.dropbox.com/s/5v9du3e1f30myo6/Automake%20Setup%200.2.6.exe?dl=0)
-- Version 0.1.5:
-	- Windows:
-		- [.exe Installer](https://www.dropbox.com/s/f3k76mv6d8l813j/Automake%20Setup%200.1.5.exe?dl=0)
-	- Linux:
-		- [.deb File](https://www.dropbox.com/s/gip1x0dfs8bp6ik/automated-makefile-electron_0.1.5_amd64.deb?dl=0)
-		- [AppImage](https://www.dropbox.com/s/r28jaz4lcviogbk/Automake-0.1.5.AppImage?dl=0)

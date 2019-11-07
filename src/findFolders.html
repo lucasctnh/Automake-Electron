@@ -28,6 +28,11 @@
 
 	<script>
 		const electron = require('electron')
+
+		const strg = require('electron-json-storage')
+		const os = require('os')
+		strg.setDataPath(os.tmpdir())
+
 		const { dialog } = electron.remote
 		const { ipcRenderer, shell } = electron
 
@@ -53,35 +58,86 @@
 			arrow.setAttribute('style', "display: none;")
 		}
 
-		let filePath = [];
+		let projPath = ''
+		let libPath = ''
+
+		let flag_dont_save = 0
+
+		ipcRenderer.on('fillPaths', async (e, item) => {
+			document.getElementById("allegro-projs").value = item[0]
+			document.getElementById("allegro-lib").value = item[1]
+
+			projPath = document.getElementById("allegro-projs").value
+			libPath = document.getElementById("allegro-lib").value
+		})
+
+		ipcRenderer.on('passDontSaveFlag', async (e, item) => {
+			console.log(item)
+			flag_dont_save = item
+		})
+
 		getPath1 = async () => {
 			return await dialog.showOpenDialog({
 				title: 'Select a folder',
 				properties: ['openDirectory']
-			}, (filePathArr) => {
-				filePath.push(filePathArr[0])
-
-				if(filePath[0] != undefined)
+			}, (filePath) => {
+				if(filePath[0] != undefined) {
 					document.getElementById("allegro-projs").value = filePath[0]
+					projPath = document.getElementById("allegro-projs").value
+				}
 			})
+
+			flag_dont_save = 0
 		}
+
 
 		getPath2 = async () => {
 			return await dialog.showOpenDialog({
 				title: 'Select a folder',
 				properties: ['openDirectory']
-			}, (filePathArr) => {
-				if(filePath[0] == undefined)
-					console.error('You need to asign projects folder first.')
-				else
-					filePath.push(filePathArr[0])
+			}, (filePath) => {
+				if(projPath === undefined)
+					dialog.showErrorBox('Error', 'You need to asign projects folder first.')
 
-				if(filePath[1] != undefined)
-					document.getElementById("allegro-lib").value = filePath[1]
+				if(filePath[0] != undefined) {
+					document.getElementById("allegro-lib").value = filePath[0]
+					libPath = document.getElementById("allegro-lib").value
+				}
 			})
+
+			flag_dont_save = 0
 		}
 
-		sendToMain = () => {
+		sendToMain = async () => {
+			let filePath = [projPath, libPath]
+
+			if(flag_dont_save === 0) {
+				const { response } = await dialog.showMessageBox({
+					type: 'question',
+					buttons: ['yes', 'no'],
+					cancelId: 1,
+					title: 'Settings',
+					message: 'Save this settings?',
+					detail: 'This will overwrite your last save'
+				})
+
+				if(response == 0) {
+					strg.has('last', (err, hasKey) => {
+						if (err) throw err
+
+						if (hasKey) {
+							strg.remove('last', (err) => {
+								if (err) throw err
+							})
+						}
+					})
+
+					strg.set('last', { projPath, libPath }, (err) => {
+						if(err) throw err;
+					})
+				}
+			}
+
 			ipcRenderer.send('load-watcher', filePath)
 		}
 
@@ -92,6 +148,13 @@
 
 		let subButton = document.querySelector('#submit')
 		subButton.onclick = sendToMain
+
+		ipcRenderer.on('open-last', (e) => {
+			dialog.showErrorBox('Error', 'No paths were found.')
+		})
+		ipcRenderer.on('open-last-f', (e) => {
+			dialog.showErrorBox('Error', 'No paths were found.')
+		})
 	</script>
 </body>
 </html>

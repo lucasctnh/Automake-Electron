@@ -21,6 +21,19 @@ body, input, button {
   font-size: 14px;
 }
 
+#cont2 {
+	margin-top: -200px;
+	background: 0;
+}
+
+#cont2 p {
+	margin-bottom: 10px;
+}
+
+#cont2 li {
+	margin-bottom: 10px;
+}
+
 .made-by-abs {
 	position: absolute;
 	bottom: 0;

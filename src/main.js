@@ -1,14 +1,19 @@
 const electron = require('electron')
 const url = require('url')
 const path = require('path')
+const strg = require('electron-json-storage')
+const os = require('os')
 
-const { app, BrowserWindow, Menu, ipcMain, remote, shell } = electron
+const { app, BrowserWindow, Menu, ipcMain, remote, shell, dialog } = electron
 
 // SET ENV
 process.env.NODE_ENV = 'production'
 
+strg.setDataPath(os.tmpdir())
+
 let mainWindow
 let addWindow
+let thirdWindow
 
 // Listen for app to be ready
 app.on('ready', () => {
@@ -34,13 +39,14 @@ app.on('ready', () => {
 	})
 
 	// Build menu from template
-	const mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
+	let mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
 
 	// Insert menu
 	Menu.setApplicationMenu(mainMenu)
 })
 
 let filePaths = []
+let flag_dont_save = 0
 
 // Handle and create cleaner (addWindow)
 function callCleanWindow() {
@@ -80,6 +86,34 @@ function callInstructionsWindow() {
 	}))
 }
 
+function callLastSettings() {
+	strg.get('last', (err, data) => {
+		if(err) throw err
+
+		if(data.projPath !== undefined || data.libPath !== undefined) {
+			filePaths = []
+			filePaths.push(data.projPath)
+			filePaths.push(data.libPath)
+
+			flag_dont_save = 1
+
+			mainWindow.webContents.send('fillPaths', filePaths)
+			mainWindow.webContents.send('passDontSaveFlag', flag_dont_save)
+		}
+		else {
+			dialog.showErrorBox('Error', "Last save couldn't be found")
+		}
+	})
+}
+
+function callLastProgram() {
+	mainWindow.webContents.send('open-last')
+}
+
+function callLastFolder() {
+	mainWindow.webContents.send('open-last-f')
+}
+
 // Load new main page
 ipcMain.on('load-watcher', async (e, item) => {
 	await mainWindow.loadURL(url.format({
@@ -87,7 +121,10 @@ ipcMain.on('load-watcher', async (e, item) => {
 		protocol: 'file:',
 		slashes: true,
 	}))
-	filePaths = item
+
+	if(filePaths.length == 0)
+		filePaths = item
+
 	mainWindow.webContents.send('response-filepaths', filePaths)
 })
 
@@ -110,8 +147,27 @@ const mainMenuTemplate = [
 		}
 	},
 	{
-		label: 'Options',
+		label: 'File',
 		submenu: [
+			{
+				label: 'Load Last Settings',
+				click() {
+					callLastSettings()
+				}
+			},
+			{
+				label: 'Open Last Folder',
+				click() {
+					callLastFolder()
+				}
+			},
+			{
+				label: 'Open Last Program',
+				accelerator: process.platform == 'darwin' ? 'Command+S' : 'Ctrl+S',
+				click() {
+					callLastProgram()
+				}
+			},
 			{
 				label: 'Call Cleaner',
 				accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
@@ -120,19 +176,19 @@ const mainMenuTemplate = [
 				}
 			},
 			{
-				label: 'Quit',
+				label: 'Exit',
 				accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
 				click() {
 					app.quit()
 				}
-			}
+			},
 		]
 	},
 	{
 		label: 'Help',
 		submenu: [
 			{
-				label: 'Github page',
+				label: 'Learn More',
 				click() {
 					shell.openExternal("https://github.com/coutlcdo/Automake-Electron")
 				}
@@ -144,7 +200,7 @@ const mainMenuTemplate = [
 				}
 			}
 		]
-	}
+	},
 ]
 
 // If mac, add empty object to menu
@@ -155,13 +211,13 @@ if(process.platform == 'darwin') {
 // Add developer tools if not in production
 if(process.env.NODE_ENV != 'production') {
 	mainMenuTemplate.push({
-		label: 'Developer Tools',
+		label: 'View',
 		submenu: [
 			{
 				role: 'reload',
 			},
 			{
-				label: 'Toggle DevTools',
+				label: 'Toggle Developers Tools',
 				accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
 				click(item, focusedWindow) {
 					focusedWindow.toggleDevTools()
