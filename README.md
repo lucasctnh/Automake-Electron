@@ -17,7 +17,7 @@ Before packaging, remember to set `NODE_ENV` as production mode.
 Pre-packaged installers:
 - Version 1.0.2:
 	- Windows:
-		- [.exe Installer](https://www.dropbox.com/s/qnmjq5qybjkv7dk/Automake%20Setup%201.0.2.exe?dl=0)
+		- [.exe Installer](https://www.dropbox.com/s/hm6a0vyy7i7thnt/Automake%20Setup%201.0.2.exe?dl=0)
 - Version 1.0.0:
 	- Linux:
 		- [.deb File](https://www.dropbox.com/s/tf8gst4d5i8mf2j/automated-makefile-electron_1.0.0_amd64.deb?dl=0)
