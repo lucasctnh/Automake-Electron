@@ -7,7 +7,7 @@ const os = require('os')
 const { app, BrowserWindow, Menu, ipcMain, remote, shell, dialog } = electron
 
 // SET ENV
-process.env.NODE_ENV = 'production'
+process.env.NODE_ENV = 'development'
 
 strg.setDataPath(os.tmpdir())
 

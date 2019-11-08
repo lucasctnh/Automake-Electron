@@ -22,6 +22,8 @@ let pathBase = ''
 let pathLib = ''
 let allegroV = ''
 
+let fullPath = ''
+
 function rewritePathOnScreen() {
 	const ul2 = document.getElementById('ul2')
 	const path1 = document.createElement('li')
@@ -179,7 +181,6 @@ clean:
 		})
 		.on('error', error => console.error(`Watcher error: ${error}`))
 
-	let fullPath = ''
 	ipcRenderer.on('open-last', (e) => {
 		if(proj === '')
 			dialog.showErrorBox('Error', 'No projects were compiled.')
