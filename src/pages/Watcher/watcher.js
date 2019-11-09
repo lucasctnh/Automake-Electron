@@ -5,12 +5,12 @@ const electron = require('electron')
 const { ipcRenderer, shell, remote } = electron
 const { dialog } = remote
 
-const name = document.getElementById('cpr')
-name.onclick = openGit
+// const name = document.getElementById('cpr')
+// name.onclick = openGit
 
-function openGit() {
-	shell.openExternal("https://github.com/coutlcdo")
-}
+// function openGit() {
+// 	shell.openExternal("https://github.com/coutlcdo")
+// }
 
 const fs = require('fs')
 const path = require('path')
@@ -151,8 +151,8 @@ clean:
 						if(data.length > 1200) {
 							content.setAttribute('class', 'dcontent alertError')
 
-							const cpr = document.getElementById('cpr')
-							cpr.setAttribute('class', 'made-by-rel')
+							// const cpr = document.getElementById('cpr')
+							// cpr.setAttribute('class', 'made-by-rel')
 						}
 						else
 							content.setAttribute('class', 'content alertError')
@@ -165,8 +165,8 @@ clean:
 						ul.innerHTML = ''
 						const content = document.getElementById('cont')
 						content.setAttribute('class', 'content')
-						const cpr = document.getElementById('cpr')
-						cpr.setAttribute('class', 'made-by-abs')
+						// const cpr = document.getElementById('cpr')
+						// cpr.setAttribute('class', 'made-by-abs')
 
 						const li = document.createElement('li')
 						const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
@@ -179,17 +179,20 @@ clean:
 		})
 		.on('error', error => console.error(`Watcher error: ${error}`))
 
+	let fullPath = ''
 	ipcRenderer.on('open-last', (e) => {
 		if(proj === '')
 			dialog.showErrorBox('Error', 'No projects were compiled.')
-		else
-			nrc.run(`${proj}.exe`, { cwd: pathBase, shell: false, onError: showError })
+		else {
+			fullPath = pathBase + '/' + proj + '.exe'
+			shell.openItem(fullPath)
+		}
 	})
 	ipcRenderer.on('open-last-f', (e) => {
 		if(proj === '')
 			dialog.showErrorBox('Error', 'No projects were compiled.')
 		else {
-			let fullPath = pathBase + '/' + proj + '.exe'
+			fullPath = pathBase + '/' + proj + '.exe'
 			shell.showItemInFolder(fullPath)
 		}
 	})

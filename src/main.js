@@ -194,7 +194,7 @@ const mainMenuTemplate = [
 				}
 			},
 			{
-				label: 'View Instructions',
+				label: 'See Instructions',
 				click() {
 					callInstructionsWindow()
 				}

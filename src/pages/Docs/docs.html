@@ -20,9 +20,10 @@
 		<h2>Instructions for the Watcher</h2>
 		<p class="bold">First step:</p>
 		<p>Search for the folder where you keep your Allegro projects. For proper operation, I suggest that you create
-		a folder to keep only the .c files and their corresponding assets.</p>
+		a folder to keep only the .c files.</p>
 		<p class="bold">Second step:</p>
-		<p>Search the folder where your Allegro library were downloaded. The name should contain the Allegro version.</p>
+		<p>Search the folder where your Allegro library were downloaded. The folder name should follow this
+		template: <strong>allegro-(version)-mingw-(version)</strong>.</p>
 		<p class="bold">Third step:</p>
 		<p>Now you should confirm if the path on text fields are correct and in the right order (the first text field should
 		have Allegro projects folder path and the second should have Allegro library folder path)</p>
@@ -30,30 +31,31 @@
 
 		<p>Once the paths have been submitted, you'll be redirected to the Watcher window. This means that Automake is
 		already reading changes in the directory, you can now keep the app on background and work on your projects.
-		Every time you save your project the app will automatically compile it into an executable.</p>
+		Every time you save your project, the app will automatically compile it into an executable.</p>
 
 		<hr/>
 
 		<h2>Instructions for the Cleaner</h2>
-		<p><strong style="color: #ff5a5a;">Important!</strong> The call to the Cleaner will only work if at least the Allegro folder was submitted.</p>
-		<p>The Cleaner can be called clicking on the <strong>File</strong> or simply hitting <strong>Ctrl+W
-		(Command+W on Mac)</strong>.</p>
+		<p><strong style="color: #ff5a5a;">Important!</strong> Calling the Cleaner will only work if at least the
+		Allegro folder was submitted.</p>
+		<p>The Cleaner can be called selecting on the fourth option of <strong>File</strong> at the menu, or simply
+		hitting <strong>Ctrl+W (Command+W on Mac)</strong>.</p>
 
 		<hr/>
 
 		<h2>Instructions for saving and opening compiled programs</h2>
-		<p>The app now has the funcionality of saving your paths settings. Once you submit, a message box will appear.
-		Choose "Yes" to save your settings. <strong style="color: #ff5a5a;">Important!</strong> The settings are
-		temporarily saved, so, they may disappear when you reboot your computer.</p>
+		<p>Once you submit, a message box will appear, choose "Yes" if you want to save your path settings.
+		<strong style="color: #ff5a5a;">Important!</strong> The settings are temporarily saved, so, they may disappear
+		when you reboot your computer.</p>
 
-		<p>To load your last settings go to <strong>File</strong> and click the first option.</p>
+		<p>To load your last settings go to <strong>File</strong> and select the first option.</p>
 
-		<p>Another new funcionality is to open the last compiled program or it's folder directly from the app. But in
-		order to that you'll have to first make a modification (saving without any works too) so that Automake compiles the
-		program.</p>
+		<p>You can also open the last compiled program, or it's folder, directly from the app. But in
+		order to that you'll have to first make a modification (saving without any modification works too) so that
+		Automake compiles the program.</p>
 
-		<p>To load your last compiled program folder go to <strong>File</strong> and click the second option. If you
-		want to open the last program itself click the third option or hit <strong>Ctrl+S (Command+S on Mac)</strong>.</p>
+		<p>To load your last compiled program folder go to <strong>File</strong> and select the second option. If you
+		want to open the last program itself select the third option or hit <strong>Ctrl+S (Command+S on Mac)</strong>.</p>
 
 		<hr/>
 
@@ -62,18 +64,18 @@
 		<p>Click <strong>Home</strong> or hit <strong>Ctrl+H (Command+H on Mac)</strong> to go back to the homepage.</p>
 	</div>
 
-	<div id="cpr" class="made-by-rel"><span id="name">Lucas Coutinho</span> &#9400;</div>
+	<!-- <div id="cpr" class="made-by-rel"><span id="name">Lucas Coutinho</span> &#9400;</div> -->
 
 	<script>
 		const electron = require('electron')
 		const { shell } = electron
 
-		const name = document.getElementById('cpr')
-		name.onclick = openGit
+		// const name = document.getElementById('cpr')
+		// name.onclick = openGit
 
-		function openGit() {
-			shell.openExternal("https://github.com/coutlcdo")
-		}
+		// function openGit() {
+		// 	shell.openExternal("https://github.com/coutlcdo")
+		// }
 	</script>
 </body>
 </html>

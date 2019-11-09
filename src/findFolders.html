@@ -6,7 +6,7 @@
 <body>
 	<span id="arrow">&uArr;</span>
 	<div class="content">
-		<p>If necessary, instructions can be found at <strong id="arrow-hover">Help</strong> (recommended).</p>
+		<p>Hover <strong id="arrow-hover">Help</strong> and follow the arrow to see the instructions (recommended).</p>
 		<hr/>
 
 		<p>Select the folder where your Allegro <strong>projects</strong> are:</p>
@@ -24,7 +24,7 @@
 		<button id="submit" class="btn">Submit</button>
 	</div>
 
-	<div id="cpr" class="made-by-abs"><span id="name">Lucas Coutinho</span> &#9400;</div>
+	<!-- <div id="cpr" class="made-by-abs"><span id="name">Lucas Coutinho</span> &#9400;</div> -->
 
 	<script>
 		const electron = require('electron')
@@ -36,12 +36,12 @@
 		const { dialog } = electron.remote
 		const { ipcRenderer, shell } = electron
 
-		const name = document.getElementById('cpr')
-		name.onclick = openGit
+		// const name = document.getElementById('cpr')
+		// name.onclick = openGit
 
-		function openGit() {
-			shell.openExternal("https://github.com/coutlcdo")
-		}
+		// function openGit() {
+		// 	shell.openExternal("https://github.com/coutlcdo")
+		// }
 
 		const phelp = document.querySelector('#arrow-hover')
 		phelp.addEventListener('mouseover', showArrow)
@@ -72,7 +72,6 @@
 		})
 
 		ipcRenderer.on('passDontSaveFlag', async (e, item) => {
-			console.log(item)
 			flag_dont_save = item
 		})
 

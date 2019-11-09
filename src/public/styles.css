@@ -78,7 +78,7 @@ body, input, button {
 	font-weight: 800;
 	font-size: 26px;
 	color: #cf4949;
-	margin-left: 110px;
+	margin-left: 85px;
 	-webkit-animation: arrowupdown 1s linear infinite;
 	animation: arrowupdown 1s linear infinite;
 }
@@ -102,7 +102,7 @@ body, input, button {
 
 .doc-content {
 	margin: 60px auto;
-	margin-bottom: 0;
+	margin-bottom: 60px;
 	max-width: 650px;
 	width: 100%;
 	text-align: center;
