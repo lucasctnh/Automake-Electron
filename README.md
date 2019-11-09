@@ -15,9 +15,10 @@ Before packaging, remember to set `NODE_ENV` as production mode.
 ## Mirrors
 
 Pre-packaged installers:
-- Version 1.0.0:
+- Version 1.0.1:
 	- Windows:
-		- [.exe Installer](https://www.dropbox.com/s/knjk4fa51fwokp3/Automake%20Setup%201.0.0.exe?dl=0)
+		- [.exe Installer](https://www.dropbox.com/s/zfd2wkmoesu6gfh/Automake%20Setup%201.0.1.exe?dl=0)
+- Version 1.0.0:
 	- Linux:
 		- [.deb File](https://www.dropbox.com/s/tf8gst4d5i8mf2j/automated-makefile-electron_1.0.0_amd64.deb?dl=0)
 		- [AppImage](https://www.dropbox.com/s/2z2pwbj7pkei6x4/Automake-1.0.0.AppImage?dl=0)
