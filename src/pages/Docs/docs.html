@@ -5,21 +5,40 @@
 </head>
 <body>
 	<div class="doc-content">
-		<h1>Read the instructions carefully:</h1><p>The algorithm right now will only work if you setup the environment
+		<h1>Read the instructions carefully:</h1><p>Right now, the algorithm will only work if you setup the environment
 		correctly.</p>
+
+		<p>Since MinGW is needed, Windows is recommended.</p>
 
 		<hr/>
 
-		<h2>Instructions for the Environment Setup</h2>
-		<p>You need to have both gcc and MinGW properly installed and setted at PATH.</p>
+		<h2>Instructions for the environment setup</h2>
+		<p>You need to have MinGW properly installed and setted at PATH. Links:
+		<a href="http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/" target="_blank">Installer</a>
+		 // <a href="http://www.mingw.org/wiki/Getting_Started" target="_blank">Guide</a></p>
 		<p><strong style="color: #ff5a5a;">Important!</strong> Inside your MinGW instalation folder, go to /bin
 		and be sure to rename the file <strong>mingw32-make</strong> to <strong>make</strong>.</p>
+		<p>Remember to put the <strong>allegro-monolith dll</strong> inside your project folder.</p>
+
+		<hr/>
+
+		<h2>Instructions to g++ compiling</h2>
+		<p><strong style="color: #ff5a5a;">Important!</strong> Changing compilers may cause unexpected errors, I suggest
+		you that select the compiler before anything else and only once per runtime.</p>
+		<p>Some aditional evironment setup is needed before compiling with g++.</p>
+		<p class="bold">First step:</p>
+		<p>Enter the Allegro folder and copy all the files inside <strong>lib folder</strong>.</p>
+		<p class="bold">Second step:</p>
+		<p>Paste the files inside the <strong>lib folder of MinGW</strong>.</p>
+		<p class="bold">Third step:</p>
+		<p>Repeat first and second step but for <strong>include folder</strong>.</p>
+		<p>You'll need the <strong>allegro-monolith dll</strong> inside your project folder for this process too.</p>
 
 		<hr/>
 
 		<h2>Instructions for the Watcher</h2>
 		<p class="bold">First step:</p>
-		<p>Search for the folder where you keep your Allegro projects. For proper operation, I suggest that you create
+		<p>Search for the folder where you keep your Allegro projects. To avoid errors, I suggest that you create
 		a folder to keep only the .c files.</p>
 		<p class="bold">Second step:</p>
 		<p>Search the folder where your Allegro library were downloaded. The folder name should follow this
@@ -38,8 +57,8 @@
 		<h2>Instructions for the Cleaner</h2>
 		<p><strong style="color: #ff5a5a;">Important!</strong> Calling the Cleaner will only work if at least the
 		Allegro folder was submitted.</p>
-		<p>The Cleaner can be called selecting on the fourth option of <strong>File</strong> at the menu, or simply
-		hitting <strong>Ctrl+W (Command+W on Mac)</strong>.</p>
+		<p>The Cleaner will delete all .o and .exe files at your selected Allegro folder. It can be called selecting on the
+		fourth option of <strong>File</strong> at the menu, or simply hitting <strong>Ctrl+W (Command+W on Mac)</strong>.</p>
 
 		<hr/>
 
@@ -51,8 +70,7 @@
 		<p>To load your last settings go to <strong>File</strong> and select the first option.</p>
 
 		<p>You can also open the last compiled program, or it's folder, directly from the app. But in
-		order to that you'll have to first make a modification (saving without any modification works too) so that
-		Automake compiles the program.</p>
+		order to that you'll have to first compile the program, making a modification on it or simply saving without any.</p>
 
 		<p>To load your last compiled program folder go to <strong>File</strong> and select the second option. If you
 		want to open the last program itself select the third option or hit <strong>Ctrl+S (Command+S on Mac)</strong>.</p>

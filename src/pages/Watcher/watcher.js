@@ -24,14 +24,18 @@ let allegroV = ''
 
 let fullPath = ''
 
+let compiler = ''
+
 function rewritePathOnScreen() {
 	const ul2 = document.getElementById('ul2')
 	const path1 = document.createElement('li')
 	const path2 = document.createElement('li')
 	if(pathBase !== '' && pathLib !== '') {
-		ul2.innerHTML = ''
+    ul2.innerHTML = ''
+    let secondItem = 'Library folder'
+    if (compiler === 'g++') secondItem = 'Modules'
 		const pathText1 = document.createTextNode(`Project folder = ${pathBase}`)
-		const pathText2 = document.createTextNode(`Library folder = ${pathLib}`)
+		const pathText2 = document.createTextNode(`${secondItem} = ${pathLib}`)
 
 		path1.appendChild(pathText1)
 		path2.appendChild(pathText2)
@@ -47,9 +51,12 @@ function rewritePathOnScreen() {
 }
 rewritePathOnScreen()
 
-ipcRenderer.on('response-filepaths', (e, item) => {
-	pathBase = item[0]
-	pathLib = item[1]
+ipcRenderer.on('response-filepaths', (e, item, comp) => {
+  compiler = comp
+
+  pathBase = item[0]
+  pathLib = item[1]
+
 	if(pathBase == undefined || pathLib.length == undefined) {
 		dialog.showErrorBox('Error', 'One or more paths are missing.')
 
@@ -70,7 +77,7 @@ ipcRenderer.on('response-filepaths', (e, item) => {
 
 	rewritePathOnScreen()
 
-	let watcher = chokidar.watch(pathBase, { ignored: /Makefile/, ignoreInitial: true, persistent: true })
+	let watcher = chokidar.watch(pathBase, { ignored: /Makefile|([\w])+(.exe)/, ignoreInitial: true, persistent: true })
 
 	watcher
 		.on('add', file_path => {
@@ -88,9 +95,10 @@ ipcRenderer.on('response-filepaths', (e, item) => {
 			let extension = path.extname(file)
 			let filename = path.basename(file, extension)
 
-			proj = filename
+      proj = filename
 
-			let data = `# Name of the project
+      if (compiler === 'gcc') {
+        let data = `# Name of the project
 PROJ_NAME=${proj}
 PROJ_EXE=$(PROJ_NAME).exe
 
@@ -122,62 +130,110 @@ $(OBJ): $(C_SOURCE)
 clean:
 	del *.o *.exe`
 
-			fs.writeFile(`${pathBase}/Makefile`, data, function (err) {
-				if (err) throw err
+        fs.writeFile(`${pathBase}/Makefile`, data, function (err) {
+          if (err) throw err
 
-				const ul = document.getElementById('ul1')
-				ul.innerHTML = ''
+          const ul = document.getElementById('ul1')
+          ul.innerHTML = ''
 
-				const li = document.createElement('li')
-				const itemText = document.createTextNode('Saved! Compiling...')
+          const li = document.createElement('li')
+          const itemText = document.createTextNode('Saved! Compiling...')
 
-				li.appendChild(itemText)
-				ul.appendChild(li)
+          li.appendChild(itemText)
+          ul.appendChild(li)
 
-				setTimeout(() => {
-					let flag_error = 0;
+          setTimeout(() => {
+            let flag_error = 0;
 
-					showError = (data) => {
-						ul.innerHTML = ''
+            showError = (data) => {
+              ul.innerHTML = ''
 
-						console.log(data)
-						flag_error = 1;
+              flag_error = 1;
 
-						const li = document.createElement('li')
-						const itemText = document.createTextNode(`${data}`)
+              const li = document.createElement('li')
+              const itemText = document.createTextNode(`${data}`)
 
-						li.appendChild(itemText)
-						ul.appendChild(li)
+              li.appendChild(itemText)
+              ul.appendChild(li)
 
-						const content = document.getElementById('cont')
-						if(data.length > 1200) {
-							content.setAttribute('class', 'dcontent alertError')
+              const content = document.getElementById('cont')
+              if(data.length > 1200) {
+                content.setAttribute('class', 'dcontent alertError')
 
-							// const cpr = document.getElementById('cpr')
-							// cpr.setAttribute('class', 'made-by-rel')
-						}
-						else
-							content.setAttribute('class', 'content alertError')
+                // const cpr = document.getElementById('cpr')
+                // cpr.setAttribute('class', 'made-by-rel')
+              }
+              else
+                content.setAttribute('class', 'content alertError')
 
-						dialog.showErrorBox('Error', 'Compilation has failed. Details are shown on app.')
-					}
-					nrc.run('make', { cwd: pathBase, shell: true, onError: showError })
+              dialog.showErrorBox('Error', 'Compilation has failed. Details are shown on app.')
+            }
+            nrc.run('make', { cwd: pathBase, shell: true, onError: showError })
 
-					if(flag_error == 0) {
-						ul.innerHTML = ''
-						const content = document.getElementById('cont')
-						content.setAttribute('class', 'content')
-						// const cpr = document.getElementById('cpr')
-						// cpr.setAttribute('class', 'made-by-abs')
+            if(flag_error == 0) {
+              ul.innerHTML = ''
+              const content = document.getElementById('cont')
+              content.setAttribute('class', 'content')
+              // const cpr = document.getElementById('cpr')
+              // cpr.setAttribute('class', 'made-by-abs')
 
-						const li = document.createElement('li')
-						const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
+              const li = document.createElement('li')
+              const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
 
-						li.appendChild(itemText)
-						ul.appendChild(li)
-					}
-				}, 1000)
-			})
+              li.appendChild(itemText)
+              ul.appendChild(li)
+            }
+          }, 1000)
+        })
+      } else if (compiler === 'g++') {
+        let data = `g++ ${proj}.cpp ${pathLib} -o ${proj} -lallegro-5.0.10-monolith-mt`
+
+        const ul = document.getElementById('ul1')
+        ul.innerHTML = ''
+
+        const li = document.createElement('li')
+        const itemText = document.createTextNode('Saved! Compiling...')
+
+        li.appendChild(itemText)
+        ul.appendChild(li)
+
+        let flag_error = 0;
+
+        showError = (data) => {
+          ul.innerHTML = ''
+
+          flag_error = 1;
+
+          const li = document.createElement('li')
+          const itemText = document.createTextNode(`${data}`)
+
+          li.appendChild(itemText)
+          ul.appendChild(li)
+
+          const content = document.getElementById('cont')
+          if(data.length > 1200) {
+            content.setAttribute('class', 'dcontent alertError')
+          }
+          else
+            content.setAttribute('class', 'content alertError')
+
+          dialog.showErrorBox('Error', 'Compilation has failed. Details are shown on app.')
+        }
+        nrc.run(data, { cwd: pathBase, shell: true, onError: showError })
+
+        if(flag_error == 0) {
+          ul.innerHTML = ''
+          const content = document.getElementById('cont')
+          content.setAttribute('class', 'content')
+
+          const li = document.createElement('li')
+          const itemText = document.createTextNode('Finished compilation! Waiting for new changes...')
+
+          li.appendChild(itemText)
+          ul.appendChild(li)
+        }
+      }
+
 		})
 		.on('error', error => console.error(`Watcher error: ${error}`))
 

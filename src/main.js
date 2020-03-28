@@ -47,6 +47,7 @@ app.on('ready', () => {
 
 let filePaths = []
 let flag_dont_save = 0
+let compiler = 'gcc'
 
 // Handle and create cleaner (addWindow)
 function callCleanWindow() {
@@ -90,19 +91,35 @@ function callLastSettings() {
 	strg.get('last', (err, data) => {
 		if(err) throw err
 
-		if(data.projPath !== undefined || data.libPath !== undefined) {
-			filePaths = []
-			filePaths.push(data.projPath)
-			filePaths.push(data.libPath)
+    if(compiler === 'gcc') {
+      if(data.projPath !== undefined || data.libPath !== undefined) {
+        filePaths = []
+        filePaths.push(data.projPath)
+        filePaths.push(data.libPath)
 
-			flag_dont_save = 1
+        flag_dont_save = 1
 
-			mainWindow.webContents.send('fillPaths', filePaths)
-			mainWindow.webContents.send('passDontSaveFlag', flag_dont_save)
-		}
-		else {
-			dialog.showErrorBox('Error', "Last save couldn't be found")
-		}
+        mainWindow.webContents.send('fillPaths', filePaths)
+        mainWindow.webContents.send('passDontSaveFlag', flag_dont_save)
+      }
+      else {
+        dialog.showErrorBox('Error', "Last save couldn't be found")
+      }
+    } else if(compiler === 'g++') {
+      if(data.projPath !== undefined || data.mods !== undefined) {
+        filePaths = []
+        filePaths.push(data.projPath)
+        filePaths.push(data.mods)
+
+        flag_dont_save = 1
+
+        mainWindow.webContents.send('fillPaths', filePaths)
+        mainWindow.webContents.send('passDontSaveFlag', flag_dont_save)
+      }
+      else {
+        dialog.showErrorBox('Error', "Last save couldn't be found")
+      }
+    }
 	})
 }
 
@@ -112,6 +129,57 @@ function callLastProgram() {
 
 function callLastFolder() {
 	mainWindow.webContents.send('open-last-f')
+}
+
+function callHome() {
+  // Restore menu and default options
+
+  filePaths = []
+  flag_dont_save = 0
+  compiler = 'gcc'
+
+	let mainMenu = Menu.buildFromTemplate(mainMenuTemplate)
+	Menu.setApplicationMenu(mainMenu)
+
+  mainWindow.loadURL(url.format({
+    pathname: path.join(__dirname, 'findFolders.html'),
+    protocol: 'file:',
+    slashes: true,
+  }))
+}
+
+function changeCompilerToGCC() {
+  compiler = 'gcc'
+
+	// Build new menu from template
+	let menuDefault = Menu.buildFromTemplate(mainMenuTemplate)
+
+	// Change menu
+  Menu.setApplicationMenu(menuDefault)
+
+	mainWindow.loadURL(url.format({
+		pathname: path.join(__dirname, 'findFolders.html'),
+		protocol: 'file:',
+		slashes: true,
+	}))
+}
+
+function changeCompilerTo(comp) {
+  compiler = comp
+
+  if (compiler === 'gcc') {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'findFolders.html'),
+      protocol: 'file:',
+      slashes: true,
+    }))
+  } else if (compiler === 'g++') {
+    mainWindow.loadURL(url.format({
+      pathname: path.join(__dirname, 'findFoldersCPP.html'),
+      protocol: 'file:',
+      slashes: true,
+    }))
+  }
 }
 
 // Load new main page
@@ -125,7 +193,12 @@ ipcMain.on('load-watcher', async (e, item) => {
 	if(filePaths.length == 0)
 		filePaths = item
 
-	mainWindow.webContents.send('response-filepaths', filePaths)
+	// Build new menu from template
+	let menuWithoutCompiler = Menu.buildFromTemplate(noCompMenuTemplate)
+
+	// Change menu
+	Menu.setApplicationMenu(menuWithoutCompiler)
+	mainWindow.webContents.send('response-filepaths', filePaths, compiler)
 })
 
 // Catch endofClean
@@ -139,11 +212,90 @@ const mainMenuTemplate = [
 		label: 'Home',
 		accelerator: process.platform == 'darwin' ? 'Command+H' : 'Ctrl+H',
 		click() {
-			mainWindow.loadURL(url.format({
-				pathname: path.join(__dirname, 'findFolders.html'),
-				protocol: 'file:',
-				slashes: true,
-			}))
+      callHome()
+		}
+	},
+	{
+    label: 'Compiler',
+    submenu: [
+      {
+        label: 'GCC (default)',
+        click() {
+          changeCompilerTo('gcc')
+        }
+      },
+      {
+        label: 'G++',
+        click() {
+          changeCompilerTo('g++')
+        }
+      },
+    ]
+	},
+	{
+		label: 'File',
+		submenu: [
+			{
+				label: 'Load Last Settings',
+				click() {
+					callLastSettings()
+				}
+			},
+			{
+				label: 'Open Last Folder',
+				click() {
+					callLastFolder()
+				}
+			},
+			{
+				label: 'Open Last Program',
+				accelerator: process.platform == 'darwin' ? 'Command+S' : 'Ctrl+S',
+				click() {
+					callLastProgram()
+				}
+			},
+			{
+				label: 'Call Cleaner',
+				accelerator: process.platform == 'darwin' ? 'Command+W' : 'Ctrl+W',
+				click() {
+					callCleanWindow()
+				}
+			},
+			{
+				label: 'Exit',
+				accelerator: process.platform == 'darwin' ? 'Command+Q' : 'Ctrl+Q',
+				click() {
+					app.quit()
+				}
+			},
+		]
+	},
+	{
+		label: 'Help',
+		submenu: [
+			{
+				label: 'Learn More',
+				click() {
+					shell.openExternal("https://github.com/coutlcdo/Automake-Electron")
+				}
+			},
+			{
+				label: 'See Instructions',
+				click() {
+					callInstructionsWindow()
+				}
+			}
+		]
+	},
+]
+
+// Menu template without compiler item
+const noCompMenuTemplate = [
+	{
+		label: 'Home',
+		accelerator: process.platform == 'darwin' ? 'Command+H' : 'Ctrl+H',
+		click() {
+      callHome()
 		}
 	},
 	{
@@ -205,12 +357,30 @@ const mainMenuTemplate = [
 
 // If mac, add empty object to menu
 if(process.platform == 'darwin') {
-	mainMenuTemplate.unshift({})
+  mainMenuTemplate.unshift({})
+
+  noCompMenuTemplate.unshift({})
 }
 
 // Add developer tools if not in production
 if(process.env.NODE_ENV != 'production') {
 	mainMenuTemplate.push({
+		label: 'View',
+		submenu: [
+			{
+				role: 'reload',
+			},
+			{
+				label: 'Toggle Developers Tools',
+				accelerator: process.platform == 'darwin' ? 'Command+I' : 'Ctrl+I',
+				click(item, focusedWindow) {
+					focusedWindow.toggleDevTools()
+				}
+			},
+		]
+  })
+
+	noCompMenuTemplate.push({
 		label: 'View',
 		submenu: [
 			{

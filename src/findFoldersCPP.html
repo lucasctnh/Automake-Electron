@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<head>
+	<title>Automake</title>
+	<link rel="stylesheet" type="text/css" href="public/styles.css">
+</head>
+<body>
+	<span id="arrow">&uArr;</span>
+	<div class="content">
+		<p>Hover <strong id="arrow-hover">Help</strong> and follow the arrow to see the instructions (recommended).</p>
+		<hr/>
+
+		<p>Select the folder where your Allegro <strong>projects</strong> are:</p>
+		<div class="like-form">
+			<input id="allegro-projs" type="text" value="" readonly>
+			<button id="b1" class="search btn">Search</button>
+		</div>
+
+		<p id="aux-mrg-top">Select the <strong>modules</strong> to add onto your Allegro project:</p>
+		<div class="like-form">
+			<input id="allegro-mods" type="text" value="" readonly>
+			<button id="b2" class="search btn">Search</button>
+		</div>
+
+		<button id="submit" class="btn">Submit</button>
+	</div>
+
+	<!-- <div id="cpr" class="made-by-abs"><span id="name">Lucas Coutinho</span> &#9400;</div> -->
+
+	<script>
+		const electron = require('electron')
+
+		const strg = require('electron-json-storage')
+		const os = require('os')
+		strg.setDataPath(os.tmpdir())
+
+		const { dialog } = electron.remote
+		const { ipcRenderer, shell } = electron
+
+		// const name = document.getElementById('cpr')
+		// name.onclick = openGit
+
+		// function openGit() {
+		// 	shell.openExternal("https://github.com/coutlcdo")
+		// }
+
+		const phelp = document.querySelector('#arrow-hover')
+		phelp.addEventListener('mouseover', showArrow)
+
+		function showArrow() {
+			const arrow = document.getElementById('arrow')
+			arrow.setAttribute('style', "display: block;")
+		}
+
+		phelp.addEventListener('mouseleave', hideArrow)
+
+		function hideArrow() {
+			const arrow = document.getElementById('arrow')
+			arrow.setAttribute('style', "display: none;")
+		}
+
+		let projPath = ''
+		let mods = []
+
+		let flag_dont_save = 0
+
+		ipcRenderer.on('fillPaths', async (e, item) => {
+			document.getElementById("allegro-projs").value = item[0]
+			document.getElementById("allegro-mods").value = item[1]
+
+			projPath = document.getElementById("allegro-projs").value
+			mods = document.getElementById("allegro-mods").value
+		})
+
+		ipcRenderer.on('passDontSaveFlag', async (e, item) => {
+			flag_dont_save = item
+		})
+
+		getPath1 = async () => {
+			return await dialog.showOpenDialog({
+				title: 'Select a folder',
+				properties: ['openDirectory']
+			}, (filePath) => {
+				if(filePath[0] != undefined) {
+					document.getElementById("allegro-projs").value = filePath[0]
+					projPath = document.getElementById("allegro-projs").value
+				}
+			})
+
+			flag_dont_save = 0
+		}
+
+
+		getPath2 = async () => {
+			return await dialog.showOpenDialog({
+				title: 'Select items',
+        properties: ['openFile', 'multiSelections'],
+        filters: [
+          { name: 'CPP', extensions: ['cpp'] },
+        ]
+			}, (filePath) => {
+				if(projPath === undefined)
+					dialog.showErrorBox('Error', 'You need to asign projects folder first.')
+
+				if(filePath != undefined) {
+          let path = filePath.map((file) => {
+            let last = file.split('\\')
+            return last[last.length-1]
+          })
+					document.getElementById("allegro-mods").value = path.join(' ')
+					mods = document.getElementById("allegro-mods").value
+				}
+			})
+
+			flag_dont_save = 0
+		}
+
+		sendToMain = async () => {
+			let filePath = [projPath, mods]
+
+			if(flag_dont_save === 0) {
+				const { response } = await dialog.showMessageBox({
+					type: 'question',
+					buttons: ['yes', 'no'],
+					cancelId: 1,
+					title: 'Settings',
+					message: 'Save this settings?',
+					detail: 'This will overwrite your last save'
+				})
+
+				if(response == 0) {
+					strg.has('last', (err, hasKey) => {
+						if (err) throw err
+
+						if (hasKey) {
+							strg.remove('last', (err) => {
+								if (err) throw err
+							})
+						}
+					})
+
+					strg.set('last', { projPath, mods }, (err) => {
+						if(err) throw err;
+					})
+				}
+			}
+
+			ipcRenderer.send('load-watcher', filePath)
+		}
+
+		let b1 = document.querySelector('#b1')
+		b1.onclick = getPath1
+		let b2 = document.querySelector('#b2')
+		b2.onclick = getPath2
+
+		let subButton = document.querySelector('#submit')
+		subButton.onclick = sendToMain
+
+		ipcRenderer.on('open-last', (e) => {
+			dialog.showErrorBox('Error', 'No paths were found.')
+		})
+		ipcRenderer.on('open-last-f', (e) => {
+			dialog.showErrorBox('Error', 'No paths were found.')
+		})
+	</script>
+</body>
+</html>
