@@ -1,6 +1,6 @@
 {
   "name": "automated-makefile-electron",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "license": "MIT",
   "description": "An app to automate the process of compiling Allegro projects",
   "author": "Lucas Coutinho <https://github.com/coutlcdo>",
