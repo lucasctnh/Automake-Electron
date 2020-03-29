@@ -14,8 +14,9 @@
 
 		<h2>Instructions for the environment setup</h2>
 		<p>You need to have MinGW properly installed and setted at PATH. Links:
-		<a href="http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/" target="_blank">Installer</a>
-		 // <a href="http://www.mingw.org/wiki/Getting_Started" target="_blank">Guide</a></p>
+		<a id="allegro-link" href="#">Allegro</a>
+		 // <a id="installer-link" href="#">Installer</a>
+		 // <a id="guide-link" href="#">Guide</a></p>
 		<p><strong style="color: #ff5a5a;">Important!</strong> Inside your MinGW instalation folder, go to /bin
 		and be sure to rename the file <strong>mingw32-make</strong> to <strong>make</strong>.</p>
 		<p>Remember to put the <strong>allegro-monolith dll</strong> inside your project folder.</p>
@@ -88,12 +89,16 @@
 		const electron = require('electron')
 		const { shell } = electron
 
-		// const name = document.getElementById('cpr')
-		// name.onclick = openGit
+		const aL = document.getElementById('allegro-link')
+		aL.onclick = () => { openExt('https://www.dropbox.com/s/rar8sta8ugsmiuh/allegro-5.0.10-mingw-4.7.0.rar?dl=0') }
+		const iL = document.getElementById('installer-link')
+		iL.onclick = () => { openExt('http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/') }
+		const gL = document.getElementById('guide-link')
+		gL.onclick = () => { openExt('http://www.mingw.org/wiki/Getting_Started') }
 
-		// function openGit() {
-		// 	shell.openExternal("https://github.com/coutlcdo")
-		// }
+		function openExt(link) {
+			shell.openExternal(link)
+		}
 	</script>
 </body>
 </html>
